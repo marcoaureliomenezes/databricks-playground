@@ -1,0 +1,50 @@
+
+
+
+
+variables:
+
+  username:
+    description: Past your username here
+    default: marcoaurelioreislima@gmail.com
+
+  my_email:
+    description: Email address to send an alert notification to
+    default: marcoaurelioreislima@gmail.com
+    
+  cluster_id:
+    description: get the lab cluster ID using a lookup table
+    lookup:
+      cluster: Serverless
+
+  dev_tag:
+    description: Set the dev tag for the catalog name
+    default: _1_dev
+  catalog_dev:
+    description: Set the catalog to create tables in
+    default: ${var.username}${var.dev_tag}
+
+  stage_tag:
+    description: Set the stage tag for the catalog name
+    default: _1_stage
+  catalog_stage:
+    description: Set the catalog to create tables in
+    default: ${var.username}${var.stage_tag}
+
+  prod_tag:
+    description: Set the prod tag for the catalog name
+    default: _1_prod
+  catalog_prod:
+    description: Set the catalog to create tables in
+    default: ${var.username}${var.prod_tag}
+
+  schema:
+    description: Shema to write to
+    default: default
+
+
+
+
+
+
+

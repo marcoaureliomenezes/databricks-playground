@@ -1,0 +1,38 @@
+resources:
+  jobs:
+    demo03_job:
+      name: ${bundle.target}_demo03_dab_${workspace.current_user.userName}
+      tasks:
+        - task_key: ddls_create_tables
+          notebook_task:
+            notebook_path: ../src/0_DDLs_retail.ipynb
+            source: WORKSPACE
+        - task_key: orders_raw_data_generator
+          depends_on:
+            - task_key: ddls_create_tables
+          notebook_task:
+            notebook_path: ../src/1_retail_orders_generator.ipynb
+            source: WORKSPACE
+        - task_key: orders_raw_bronze
+          depends_on:
+            - task_key: orders_raw_data_generator
+          notebook_task:
+            notebook_path: ../src/2_retail_orders_raw_bronze.ipynb
+            source: WORKSPACE
+        - task_key: orders_bronze_silver
+          depends_on:
+            - task_key: orders_raw_bronze
+          notebook_task:
+            notebook_path: ../src/3_retail_orders_bronze_silver.ipynb
+            source: WORKSPACE
+      parameters:
+        - name: odate
+          default: "2025-05-05"
+        - name: catalog
+          default: ${var.target_catalog}
+        - name: path_orders_raw
+          default: /Volumes/prd/stage/raw_data_managed/raw_data/retail/orders_csv/orders
+        - name: table_orders_bronze
+          default: retail_orders
+        - name: table_orders_silver
+          default: cleaned_retail_orders

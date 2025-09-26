@@ -1,0 +1,21 @@
+
+
+resources:
+  pipelines:
+    health_etl_pipeline:
+      name: health_etl_pipeline_${bundle.target}
+      catalog: ${var.target_catalog}
+      target: ${var.schema}
+      serverless: true
+      libraries:
+        - notebook:
+           path: ../../src/dlt_pipelines/ingest-bronze-silver_dlt.ipynb
+        - notebook:
+           path: ../../src/dlt_pipelines/gold_tables_dlt.sql
+        - notebook:
+           path: ../../tests/integration_tests/integration_tests_dlt.ipynb
+
+      configuration:
+        target: ${bundle.target}
+        raw_data_path: ${var.raw_data_path}
+        

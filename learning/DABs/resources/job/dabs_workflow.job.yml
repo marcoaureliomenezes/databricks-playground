@@ -1,0 +1,32 @@
+
+
+resources:
+  jobs:
+    health_etl_workflow:
+      name: health_etl_workflow_${bundle.target}
+      description: Final Workflow SDK
+      email_notifications:
+        on_failure:
+          - ${var.my_email}
+      tasks:
+        - task_key: Unit_Tests
+          notebook_task:
+            notebook_path: ../../src/test.py
+            source: WORKSPACE
+          description: Execute Unit tests for project
+        - task_key: Visualization
+          depends_on:
+            - task_key: Health_ETL
+          notebook_task:
+            notebook_path: ../../src/Final_Visualization.py
+            base_parameters:
+              catalog_name: ${var.target_catalog}
+            source: WORKSPACE
+          description: Final visualization of project.
+        - task_key: Health_ETL
+          depends_on:
+            - task_key: Unit_Tests
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.health_etl_pipeline.id}
+            full_refresh: true
+          description: Delta Live Tables
